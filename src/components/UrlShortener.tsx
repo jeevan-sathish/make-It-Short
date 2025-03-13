@@ -34,16 +34,24 @@ const UrlShortener = ({ onUrlShortened }: UrlShortenerProps) => {
     }
   };
 
-  // Mock URL shortening function (in a real app, this would call an API)
+  // Real URL shortening function that creates working links
   const shortenUrl = async (longUrl: string): Promise<string> => {
     setIsLoading(true);
     
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // For demo purposes, create a shortened URL
+    // Create a random ID for the shortened URL
     const randomId = Math.random().toString(36).substring(2, 8);
-    const shortened = `https://short.url/${randomId}`;
+    
+    // Store the mapping in localStorage (in a real app, this would be in a database)
+    const urlMappings = JSON.parse(localStorage.getItem("urlMappings") || "{}");
+    urlMappings[randomId] = longUrl;
+    localStorage.setItem("urlMappings", JSON.stringify(urlMappings));
+    
+    // Create a real shortened URL that works with our application
+    const baseUrl = window.location.origin;
+    const shortened = `${baseUrl}/url/${randomId}`;
     
     setIsLoading(false);
     return shortened;
